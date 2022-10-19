@@ -1,19 +1,24 @@
-import example from './images/example.jpg'
 import './styles/main.scss'
 
-// Create a class property without a constructor
-class Game {
-  name = 'Violin Charades'
+const imageContainer = document.querySelector('.image-container');
+
+const fetchImages = async url => {
+  const data = await fetch(url)
+    .then(res => res.json())
+  return data;
+};
+
+const images = async () => {
+  const data = await fetchImages(`https://api.unsplash.com/photos/?client_id=${process.env.Access_key}`);
+  data.forEach(obj => {
+    const { urls } = obj;
+    console.log(urls.full)
+    const img = document.createElement('img');
+    img.setAttribute('src', `${urls.full}`);
+    img.classList.add('img');
+    imageContainer.append(img);
+  })
+return data;
 }
-const myGame = new Game()
-// Create paragraph node
-const p = document.createElement('p')
-p.textContent = `I like ${myGame.name}.`
 
-// Create heading node
-const heading = document.createElement('h1')
-heading.textContent = 'Interesting!'
-
-// Append heading node to the DOM
-const app = document.querySelector('#root')
-app.append(heading, p)
+images();
